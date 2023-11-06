@@ -1,43 +1,51 @@
-// we have these pieces
-// that touch, but not completely
-// and nowhere neatly
+// multiple passes
+// brings deeper understanding
+// radial - days - nights
 
+let img1, img2;
+let a, b, c, d;
 
-let p
-let bg
-let r = 30;
+let stars = []
 
 function preload() {
-  p= []
-  for(let i = 1;i<7;i++){
-    p[i-1]= loadImage("https://assets.codepen.io/4559259/p"+ i+".png");
-  }
-  bg = loadImage("https://assets.codepen.io/4559259/p-back.jpg");
-  
+  img1 = loadImage("https://assets.codepen.io/4559259/radial.jpg");
+
+  img2 = loadImage("https://assets.codepen.io/4559259/star.png");
 }
 
 function setup() {
-  createCanvas(windowWidth,windowHeight);
-  angleMode(DEGREES)
-  noStroke()
-   background(0)
-  imageMode(CENTER)
+  createCanvas(600, 600);
+  angleMode(DEGREES);
+  imageMode(CENTER);
+  nStars = int(random(2000,2000))
+  for (let i = 0;i<nStars;i++){
+    stars[i] = {
+      r : random(0,width),
+      a : random(0,360),
+      s : randomGaussian(2,5)
+    }
+  }
 }
 
 function draw() {
-  t = frameCount/100 ;
-  // background(0)
-   translate(width/2,height/2);
-  // image(bg,0,0,600,600)
-  for(let i = 0;i<6;i++){
-    push()
-    ease1 = pow(sin(t+i%2*t),2)
-    ease2 = pow(cos(t+i%2*t),2)
-    rotate(360*sin(t))
-    x = i*40*ease1 - 30*sin((i+1)*t)
-    y = i*30*ease1*ease2
-    translate(x,y)
-    image(p[i],0,0,600,600)
+  translate(width / 2, height / 2);
+  push();
+  image(img1, 0, 0, 600, 600);
+  image(img2, 0, 0, 200, 200);
+  n = 1
+  for(let i = 0;i<n;i++){
+ radial(360*abs(sin(40*n*i+frameCount/20)))
   }
-  pop()
+}
+function radial(t1){
+  
+  c = 20 ;
+  stroke(255,255,255,30)
+  line(0,0,width*cos(t1),width*sin(t1))
+  for(let i = 0;i<nStars;i++){
+   if((t1-stars[i].a) >=0 && t1-(stars[i].a) <=c ){
+     image(img2,stars[i].r*cos(stars[i].a),stars[i].r*sin(stars[i].a),c+stars[i].s-(t1-stars[i].a),c+stars[i].s-(t1-stars[i].a))
+   }else{image(img2,stars[i].r*cos(stars[i].a),stars[i].r*sin(stars[i].a),stars[i].s,stars[i].s)}
+      
+  }
 }
